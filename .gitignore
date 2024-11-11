@@ -1,1 +1,3 @@
 /.idea/*
+/db.sqlite3   # tento soubor musi byt v ignoru protoze je v nem hodne dat a delal by problem na gitu
+/.env
