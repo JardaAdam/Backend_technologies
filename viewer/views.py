@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-"""Tato finkce vraci pouze return """
+"""Tato funkce vraci pouze return """
 
 
 def hello(request):
