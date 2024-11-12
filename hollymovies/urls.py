@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from viewer.views import hello, hello2, hello3, add, add2    # muzu zapsat * a bude se importovat vse z views.py
+from viewer.views import hello, hello2, hello3, hello4, add, add2, \
+    add3  # muzu zapsat * a bude se importovat vse z views.py
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +29,11 @@ urlpatterns = [
 
     path('hello3', hello3),
 
+    path('hello4', hello4),
+
     path('add/<int:num1>/<int:num2>', add),
 
-    path('add2', add2)
+    path('add2', add2),
+
+    path('add3', add3),
 ]
