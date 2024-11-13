@@ -48,5 +48,7 @@ def add3(request):
     num1 = int(request.GET.get('num1', 0))
     num2 = int(request.GET.get('num2', 0))
     result = num1 + num2
-    context = {'result': result}
+    context = {'num1': num1,
+               'num2': num2,
+               'result': result}
     return render(request=request, template_name="add.html", context=context)
