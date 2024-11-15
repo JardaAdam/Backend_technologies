@@ -59,8 +59,8 @@ class Creator(Model):
 class Movie(Model):
     title_orig = CharField(max_length=64, null=False, blank=False)
     title_cz = CharField(max_length=64, null=True, blank=True)
-    year = IntegerField()
-    length = IntegerField()
+    year = IntegerField(null=True, blank=True)
+    length = IntegerField(null=True, blank=True)
     directors = ManyToManyField(Creator, blank=True, related_name='directing')
     actors = ManyToManyField("viewer.Creator", blank=True, related_name='acting')
     """ odkazuje na tabulku ktera je vytvorena az po teto tabulce"""
@@ -70,14 +70,11 @@ class Movie(Model):
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['title_orig']
 
-class Meta:
-    ordering = ['title_orig']
+    def __repr__(self):
+        return f"Movie(title_orig={self.title_orig})"
 
-
-def __repr__(self):
-    return f"Movie(title_orig={self.title_orig})"
-
-
-def __str__(self):
-    return f"{self.title_orig} ({self.year})"
+    def __str__(self):
+        return f"{self.title_orig} ({self.year})"
