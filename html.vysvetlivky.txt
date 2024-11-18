@@ -2,5 +2,7 @@
 
 {%%} = cikly
 
+{% extends "base.html" %}  <!-- touto zkratkou se rozsiruje soubor base.html v hlavni strance-->
+
 {% if not forloop.last %},  {% endif %}
       <!--pokud chci carku mezi jmeny hercu ale ne za poslednim-->
