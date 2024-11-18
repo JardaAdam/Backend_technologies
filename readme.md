@@ -52,32 +52,56 @@ python manage.py startapp viewer
 
 ## Funkcionalita
 
-- [ ] informace o filmu
-- [ ] informace o režisérech/hercích
+- [x] seznam všech filmů (movies)
+- [x] informace o filmu (viewer/movie-detail)
+- [x] informace o režisérech/hercích (viewer/creator-details)
 - [ ] vkládání/editace/mazání filmu, režiséra, herce,...
 - [ ] hodnocení filmu
-- [ ] filtrování filmů na základě žánru, roku, herce, země...
+- [ ] filtrování filmů na základě: 
+  - [x] žánru, (viewer/genre-detail)
+  - [ ] roku, 
+  - [x] herce, 
+  - [x] země 
 - [ ] seřazení filmů podle ratingu, roku,...
 - [ ] vyhledávání filmu/režiséra/herce...
 
 ## Databáze
 
+### Modely
+
+- [x] genre
+  - [x] id
+  - [x] name
+- [x] country
+  - [x] id
+  - [x] name
+- [ ] creator
+  - [x] id
+  - [x] first_name
+  - [x] last_name
+  - [x] date_of_birth
+  - [x] date_of_death
+  - [x] nationality -> country
+  - [x] biography
+  - [ ] awards (n:m -> award)
+  - [ ] movies_actor (n:m -> movie)
+  - [ ] movies_director (n:m -> movie)
 - [ ] movie
-  - [ ] id
-  - [ ] title_orig
-  - [ ] title_cz
-  - [ ] year
-  - [ ] length (min)
+  - [x] id
+  - [x] title_orig
+  - [x] title_cz
+  - [x] year
+  - [x] length (min)
   - [ ] novel_id -> novel
   - [ ] productions (n:m -> production_company)
-  - [ ] directors (n:m -> creator)
-  - [ ] actors (n:m -> creator)
-  - [ ] countries (n:m -> country)
-  - [ ] genres (n:m -> genre)
+  - [x] directors (n:m -> creator)
+  - [x] actors (n:m -> creator)
+  - [x] countries (n:m -> country)
+  - [x] genres (n:m -> genre)
   - [ ] rating
   - [ ] medias (n:m -> media)
   - [ ] awards (n:m -> award)
-  - [ ] description
+  - [x] description
   - [ ] reviews -> review
 - [ ] review
   - [ ] id
@@ -100,23 +124,6 @@ python manage.py startapp viewer
   - [ ] id  
   - [ ] title
   - [ ] author -> creator
-- [ ] creator
-  - [ ] id
-  - [ ] first_name
-  - [ ] last_name
-  - [ ] date_of_birth
-  - [ ] date_of_death
-  - [ ] nationality -> country
-  - [ ] biography
-  - [ ] awards (n:m -> award)
-  - [ ] movies_actor (n:m -> movie)
-  - [ ] movies_director (n:m -> movie)
-- [ ] genre
-  - [ ] id
-  - [ ] name
-- [ ] country
-  - [ ] id
-  - [ ] name
 - [ ] user
   - [ ] id
   - [ ] username
@@ -129,6 +136,122 @@ python manage.py startapp viewer
   - [ ] movie_id -> movie
   - [ ] actors (n:m -> creators)
   - [ ] description
+
+### Migrace
+Při každé změně v modelech musíme provést migraci databáze:
+- vytvoření migračního skriptu:
+```bash
+python manage.py makemigration
+```
+- spuštění migrace:
+```bash
+python manage.py migrate 
+```
+
+> [!INFO]
+> Migrační skripty by měli být součástí repozitáře.
+
+> [!WARNING]  
+> Databázový soubor není součástí repozitáře, což znamená, že může dojít k situaci, kdy v nějaké
+> branch či commit nebude zdrojový kód odpovídat aktuálnímu schématu v databázi
+
+## DUMP/LOAD databáze (export/import) s UTF znaky
+Nainstalujeme rozšíření:
+```bash
+pip install django-dump-load-utf8
+```
+
+Přidáme `'django_dump_load_utf8'` do `INSTALLED_APPS` v souboru `settings.py`.
+
+Export (DUMP):
+```bash
+python manage.py dumpdatautf8 viewer --output ./files/fixtures.json
+```
+
+Import (LOAD):
+```bash
+python manage.py loaddatautf8 ./files/fixtures.json
+```
+
+## Dotazy do databáze
+### .all()
+Vrací kolekci všech nalezených záznamů z dané tabulky:
+`Movie.objects.all()`
+
+### .get()
+Vrací jeden nalezený záznam pro dané podmínky:
+`Movie.objects.get(id=3)`
+
+### .filter()
+Vrací kolekci záznamů, které splňují podmínky:
+`Movie.objects.filter(id=3)`
+
+`Movie.objects.filter(year=1994)`
+
+`Movie.objects.filter(title_orig="The Green Mile")`
+
+`drama = Genre.objects.get(name="Drama")`
+
+`Movie.objects.filter(genres=drama)`
+
+`Movie.objects.filter(genres=Genre.objects.get(name="Krimi"))`
+
+`Movie.objects.filter(genres__name="Drama")`
+
+`Creator.objects.filter(date_of_birth__year=1955)`
+
+`Movie.objects.filter(year=1995)`
+
+`Movie.objects.filter(year__gt=1995)` -- `gt` => "větší než" (greater then)
+
+`Movie.objects.filter(year__gte=1995)` -- `gte` => "větší nebo rovno" (greater then equal)
+
+`Movie.objects.filter(year__lt=1995)` -- `lt` => "menší než" (less then)
+
+`Movie.objects.filter(year__lte=1995)` -- `lte` => "menší nebo rovno" (less then equal)
+
+`Movie.objects.filter(title_orig__contains="The")`
+
+`Movie.objects.filter(title_orig__in=['Se7en', 'Forrest Gump'])`
+
+`Movie.objects.exclude(title_orig="Se7en")`
+
+Test, jestli hledaný záznam existuje:
+`Movie.objects.filter(year=1990).exists()`
+
+Spočítáme počet vyhovujících záznamů:
+`Movie.objects.all().count()`
+
+`Movie.objects.filter(year=1994).count()`
+
+Uspořádání výsledků dotazu:
+`Movie.objects.all()`
+
+`Movie.objects.all().order_by('year')` -- uspořádání vzestupně
+
+`Movie.objects.all().order_by('-year')` -- uspořádání sestupně
+
+## Manipulace s daty
+### Vytvoření nového záznamu (create)
+`Genre.objects.create(name="Dokumentární")`
+
+```python
+genre = Genre(name="Sci-fi")
+genre.save()
+```
+
+### Úprava existujícího záznamu (update)
+```python
+scifi = Genre.objects.get(name="Sci-fi")
+scifi.name = "SciFi"
+scifi.save()
+```
+
+### Smazání záznamu (delete)
+`Genre.objects.get(name="SciFi").delete()`
+
+> [!WARNING] 
+> Data se do databáze nahrají i se svým id, tedy dojde k přepisu již existujících záznamů.
 
 # Finální projekt - rady
 
@@ -174,4 +297,3 @@ pip install -r requirements.txt
   - může být anglicky (preferováno) nebo česky
   - může obsahovat ER diagram
   - může obsahovat screenshoty
-

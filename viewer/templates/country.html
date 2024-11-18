@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Seznam filmů země '{{ country }}':</h1>
+    {% if country.movies.all %}
+        <ul>
+            {% for movie in country.movies.all %}
+                <li><a href="{% url 'movie' movie.id %}">{{ movie }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

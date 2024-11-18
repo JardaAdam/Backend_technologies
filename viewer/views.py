@@ -1,13 +1,15 @@
 from django.shortcuts import render
 
-from viewer.models import Movie, Creator, Genre
+from viewer.models import Movie, Creator, Genre, Country
 
 
 def home(request):
     return render(request,
                   "movies.html",
                   {'movies': Movie.objects.all(),
-                   'genres': Genre.objects.all()})
+                   'genres': Genre.objects.all(),
+                   'country': Country.objects.all(),
+                   })
 
 
 def movies(request):
@@ -39,5 +41,12 @@ def creator(request, pk):
 def genre(request, pk):
     try:
         return render(request, "genre.html", {'genre': Genre.objects.get(id=pk)})
+    except:
+        return home(request)
+
+
+def country(request, pk):
+    try:
+        return render(request, "country.html", {'country': Country.objects.get(id=pk)})
     except:
         return home(request)
