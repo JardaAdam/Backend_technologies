@@ -4,19 +4,16 @@ from viewer.models import Movie, Creator, Genre, Country
 
 
 def home(request):
-    return render(request,
-                  "movies.html",
-                  {'movies': Movie.objects.all(),
-                   'genres': Genre.objects.all(),
-                   'country': Country.objects.all(),
-                   })
-
+    return render(request, "home.html")
 
 def movies(request):
     # movies_list = Movie.objects.all()   """ vytahnu z databaze """
     # context = {'movies': movies_list}     """ vlozim do context """
     # return render(request, "movies.html", context)   """ pislu do templates movies.html """
-    return render(request, "movies.html", {'movies': Movie.objects.all()})
+    return render(request,
+                  "movies.html",
+                  {'movies': Movie.objects.all(),
+                          'genres': Genre.objects.all()})
 
 
 def movie(request, pk):
@@ -50,3 +47,4 @@ def country(request, pk):
         return render(request, "country.html", {'country': Country.objects.get(id=pk)})
     except:
         return home(request)
+# TODO tato funkce funguje pouze pro filmy ale ne pro Actors!!
