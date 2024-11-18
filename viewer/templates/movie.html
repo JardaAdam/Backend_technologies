@@ -2,39 +2,40 @@
 
 {% block content %}
 <h1>{{ movie.title_orig }}</h1>
-   <div class="movie-title-cz">{{ movie.title_cz }}</div>
-   <div class="movie-year">Rok: {{ movie.year }}</div>
-   <div class="movie-lenght">Délka: {{ movie.length_format }} minut</div>
-   <div class="movie-directors">Režie:
-         {% for director in movie.directors.all %}
-         {{ director.first_name }} {{ director.last_name }}
-      {% empty %}
-         Tento film nemá žádného režiséra.
-      {% endfor %}
-   </div>
-   <div class="movie-actors">Hrají:
-      {% for actor in movie.actors.all %}
-         {{ actor.full_name }}
-      {% if not forloop.last %},  <!--pokud chci carku mezi jmeny hercu ale ne za poslednim-->
-      {% endif %}
-      {% endfor %}
-   </div>
-    <div class="movie-cantries">Země:
-      {% for country in movie.countries.all %}
-         {{ country }}{% if not forloop.last %}, {% endif %}
-      {% empty %}
-         Tento film nema zadnou zemi.
-      {% endfor %}
-    </div>
-    <div class="movie-genres">Žánry:
-        {% for genre in movie.genres.all %}
-            {{ genre }}{% if not forloop.last %}, {% endif %}
-        {% empty %}
-            Tento film nemá žádný žánr.
-        {% endfor %}
-    </div>
+<div class="movie-title-cz">{{ movie.title_cz }}</div>
+<div class="movie-year">Rok: {{ movie.year }}</div>
+<div class="movie-lenght">Délka: {{ movie.length_format }} minut</div>
+<div class="movie-directors">Režie:
+    {% for director in movie.directors.all %}
+    <a href="{% url 'creator' director.id %}"> {{ director.first_name }} {{ director.last_name }}</a>
+    {% if not forloop.last %}, {% endif %}
+    {% empty %}
+    Tento film nemá žádného režiséra.
+    {% endfor %}
+</div>
+<div class="movie-actors">Hrají:
+    {% for actor in movie.actors.all %}
+    <a href="{% url 'creator' actor.id %}">{{ actor.full_name }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+            Tento film nemá žádného herce.
+    {% endfor %}
+</div>
+<div class="movie-cantries">Země:
+    {% for country in movie.countries.all %}
+        {{ country }}{% if not forloop.last %}, {% endif %}
+    {% empty %}
+    Tento film nema zadnou zemi.
+    {% endfor %}
+</div>
+<div class="movie-genres">Žánry:
+    {% for genre in movie.genres.all %}
+     <a href="{% url 'genre' genre.id %}">{{ genre }}</a>{% if not forloop.last %}, {% endif %}
+    {% empty %}
+    Tento film nemá žádný žánr.
+    {% endfor %}
+</div>
 <br>
-    <div class="movie-description">
-        {{ movie.description }}
-    </div>
+<div class="movie-description">
+    {{ movie.description }}
+</div>
 {% endblock %}

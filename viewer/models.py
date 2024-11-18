@@ -6,6 +6,7 @@ from django.db.models import Model, CharField, DateField, ForeignKey, SET_NULL, 
 # Create your models here.
 # tabulka o dvou sloupcich
 class Genre(Model):
+    objects = None
     name = CharField(max_length=32, null=False, blank=False, unique=True)
     """              delka, nesmi byt nevyplneno,nesmi byt prazdne pole pri odesilani formulare, unikatni   """
 
@@ -35,6 +36,7 @@ class Country(Model):
 
 
 class Creator(Model):
+    objects = None
     first_name = CharField(max_length=32, null=True, blank=True)
     last_name = CharField(max_length=32, null=True, blank=True)
     date_of_birth = DateField(null=True, blank=True)
