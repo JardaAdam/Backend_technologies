@@ -52,11 +52,15 @@ class Creator(Model):
         return f"Creator(first_name=({self.first_name}, last_name={self.first_name}, date_of_birth={self.date_of_birth})"
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.date_of_birth})"
+        return f"{self.first_name} {self.last_name} *({self.date_of_birth})"
         # "Martin Novák (1975-05-06)"
+
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Movie(Model):
+    objects = None
     title_orig = CharField(max_length=64, null=False, blank=False)
     title_cz = CharField(max_length=64, null=True, blank=True)
     year = IntegerField(null=True, blank=True)
@@ -78,3 +82,10 @@ class Movie(Model):
 
     def __str__(self):
         return f"{self.title_orig} ({self.year})"
+
+    def length_format(self):
+        hours = self.length // 60
+        minutes = self.length % 60
+        if minutes < 10:
+            minutes = f"0{minutes}"
+        return f"{hours}:{minutes}"
