@@ -1,0 +1,4 @@
+pip install -r .\requirements.txt instalace balicku ze souboru
+-r = říká pip, že má zpracovat soubor se seznamem balíčků (requirements file).
+
+python manage.py runserver
