@@ -4,7 +4,7 @@ from viewer.models import Movie
 
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "home.html") # odkaz na statickou stranku
 
 
 def movies(request):

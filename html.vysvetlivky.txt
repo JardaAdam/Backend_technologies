@@ -1,3 +1,5 @@
 {{}} =
 
 {%%} = cikly
+
+{% extends "base.html" %}  <!-- touto zkratkou se rozsiruje soubor base.html v hlavni strance-->
