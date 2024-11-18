@@ -22,7 +22,7 @@
 </div>
 <div class="movie-cantries">Země:
     {% for country in movie.countries.all %}
-        {{ country }}{% if not forloop.last %}, {% endif %}
+        <a href="{% url 'country' country.id %}">{{ country }}</a>{% if not forloop.last %}, {% endif %}
     {% empty %}
     Tento film nema zadnou zemi.
     {% endfor %}

@@ -1,10 +1,15 @@
 from django.shortcuts import render
 
-from viewer.models import Movie
+from viewer.models import Movie, Creator, Genre, Country
 
 
 def home(request):
-    return render(request, "home.html") # odkaz na statickou stranku
+    return render(request,
+                  "movies.html",
+                  {'movies': Movie.objects.all(),
+                   'genres': Genre.objects.all(),
+                   'country': Country.objects.all(),
+                   })
 
 
 def movies(request):
