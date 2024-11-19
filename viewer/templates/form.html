@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+<!-- {% csrf_token %} nesmi chybet je to bezpecnosti opatreni pro ukladani do databaze pomoci tokenu
+ tento koken ma omezenou delku platnosti takze pri delsim formulari osetrit data proti strate meziukladanit-->
+    <table>{{ form }}</table>
+    <input type="submit" id="id_submit" value="Ulozit" class="btn btn-primary">
+</form>
+{% endblock %}

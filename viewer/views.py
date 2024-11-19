@@ -1,7 +1,10 @@
+from django.db.models.expressions import result
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, CreateView, FormView
 
+from viewer.forms import CreatorForm
 from viewer.models import Movie, Creator, Genre, Country
 
 
@@ -55,10 +58,12 @@ def movie(request, pk):
         return render(request, "movie.html", context)
     return movies(request)  # osetreni co se stane kdyz film s hledanym nazvem neexistuje
 
+
 # nahrada za def creators
 class CreatorsListView(ListView):
     template_name = "creators.html"
     model = Creator
+
 
 def creator(request, pk):
     try:
@@ -68,6 +73,31 @@ def creator(request, pk):
         return render(request, "creator.html", {'creator': Creator.objects.get(id=pk)})
     except:
         return home(request)
+
+
+class CreatorFormView(FormView):
+    template_name = "form.html"
+    form_class = CreatorForm  # odkazuje se na forms.py CreatorForm(ModelForm)
+    success_url = reverse_lazy('creators')  # po ulozeni formulare se stranka vrati na adresu definovanou v urls.py
+
+    # ulozeni dat od uzivatele ve formulari
+    def form_valid(self, form):
+        print("Form is valid")
+        result = super().form_valid(form)
+        cleaned_data = form.cleaned_data
+        Creator.objects.create(
+            first_name=cleaned_data['first_name'],
+            last_name=cleaned_data['last_name'],
+            date_of_birth=cleaned_data['date_of_birth'],
+            date_of_death=cleaned_data['date_of_death'],
+            nationality=cleaned_data['nationality'],
+            biography=cleaned_data['biography'],
+        )
+        return result
+
+    def form_invalid(self, form):
+        print("Form is invalid")
+        return super().form_invalid(form)
 
 
 def genre(request, pk):
