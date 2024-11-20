@@ -2,7 +2,7 @@ from django.db.models.expressions import result
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView, FormView
+from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView
 
 from viewer.forms import CreatorForm
 from viewer.models import Movie, Creator, Genre, Country
@@ -23,7 +23,7 @@ def movies(request):
 
 
 # Class-based views
-## View class
+## View class ->
 class MoviesView(View):
     def get(self, request):
         return render(request,
@@ -33,13 +33,17 @@ class MoviesView(View):
 
 
 ## TemplateView class
-# nahrada za def movies
+# nahrada za def movies pracuje rovnou s template ale pracuji s databazi rucne (extra_context)
 class MoviesTemplateView(TemplateView):
     template_name = "movies.html"
     extra_context = {'movies': Movie.objects.all(), 'genres': Genre.objects.all()}
 
 
 ## ListView
+# pracuji zde rovnou s template a modelem.
+#je zde obecna promena (object_list)
+# je slozitejsi do template posilat data z vice tabulek
+# vhodne pro jednoduche seznami
 class MoviesListView(ListView):
     # tato view neposílá do template informace o žánrech
     # lze to řešit metodou get_context_data -> tam můžu přidávat cokoliv
@@ -74,7 +78,11 @@ def creator(request, pk):
     except:
         return home(request)
 
+## Formulare
+# pouzivaji se pro uzivatelskou praci s daty
+# najdu v form.py
 
+""" Vkladani """
 class CreatorFormView(FormView):
     template_name = "form.html"
     form_class = CreatorForm  # odkazuje se na forms.py CreatorForm(ModelForm)
@@ -85,7 +93,7 @@ class CreatorFormView(FormView):
         print("Form is valid")
         result = super().form_valid(form)
         cleaned_data = form.cleaned_data
-        Creator.objects.create(
+        Creator.objects.create(             # touto funkci vytahnu data z formulare a vlozim je do databaze
             first_name=cleaned_data['first_name'],
             last_name=cleaned_data['last_name'],
             date_of_birth=cleaned_data['date_of_birth'],
@@ -94,10 +102,41 @@ class CreatorFormView(FormView):
             biography=cleaned_data['biography'],
         )
         return result
+    # tato funkce vypisuje chybovou hlasku pokud nejsou data zadana spravne
+    def form_invalid(self, form):
+        print("Form is invalid")
+        return super().form_invalid(form)
+
+# zjednoduseny zapis predesle class cerpa data z models.py
+# pokud upravuji v models.py nejake data u Model propise se mi to v cele funkcnosti kodu napr. upravi se struktura formulare
+class CreatorCreateView(CreateView):
+    template_name = "form.html"
+    form_class = CreatorForm        # forms.py
+    success_url = reverse_lazy('creators')  # presmerovava po odeslani formulare na zadanou url
 
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
+
+""" Uprava dat"""
+class CreatorUpdateView(UpdateView):    # musim pridat url do urls.py
+    template_name = "form.html"
+    form_class = CreatorForm
+    success_url = reverse_lazy('creators')
+    model = Creator
+
+
+
+    def form_invalid(self, form):
+        print("Form is invalid")
+        return super().form_invalid(form)
+
+""" Mazani dat """
+class CreatorDeleteView(DeleteView):
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy('creators')
+    model = Creator
+
 
 
 def genre(request, pk):
