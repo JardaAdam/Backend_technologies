@@ -45,6 +45,12 @@ class CreatorForm(ModelForm):
     # nationality = ModelChoiceField(queryset=Country.objects, required=False)
     # biography = CharField(widget=Textarea, required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            # TODO pochopit co to dela
+
     # funkce pro kontrolu vlozenych dat a jejich uprava
 
     # pro jednu polozku

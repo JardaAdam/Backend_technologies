@@ -4,11 +4,11 @@ Filmová databáze.
 
 ## Struktura projektu
 - `hollymovies` - složka projektu (obsahuje informace o celém projektu)
-  - `__init.py__` - je zde jen proto, aby daná složka byla package
-  - `asgi.py` - nebudeme používat
-  - `settings.py` - nastavení celého projektu
-  - `urls.py` - zde jsou definované url cesty
-  - `wsgi.py` - nebudeme používat
+- `__init.py__` - je zde jen proto, aby daná složka byla package
+- `asgi.py` - nebudeme používat
+- `settings.py` - nastavení celého projektu
+- `urls.py` - zde jsou definované url cesty
+- `wsgi.py` - nebudeme používat
 
 ## Spuštění projektu/serveru
 ```bash
@@ -42,26 +42,37 @@ python manage.py startapp viewer
 
 ### Struktura aplikace
 - `viewer` - složka aplikace
-  - `migrations` - složka obsahující migrační skripty
-  - `__init__.py` - prázný soubor, slouží k tomu, aby složka fungovala jako package
-  - `admin.py` - zde uvádíme modely, které se budou zobrazovat v admin sekci
-  - `apps.py` - nastavení aplikace
-  - `models.py` - definice modelů (schéma databáze)
-  - `tests.py` - testy
-  - `views.py` - funcionalita
+ - `migrations` - složka obsahující migrační skripty
+ - `__init__.py` - prázný soubor, slouží k tomu, aby složka fungovala jako package
+ - `admin.py` - zde uvádíme modely, které se budou zobrazovat v admin sekci
+ - `apps.py` - nastavení aplikace
+ - `models.py` - definice modelů (schéma databáze)
+ - `tests.py` - testy
+ - `views.py` - funcionalita
 
 ## Funkcionalita
 
 - [x] seznam všech filmů (movies)
 - [x] informace o filmu (viewer/movie-detail)
 - [x] informace o režisérech/hercích (viewer/creator-details)
-- [ ] vkládání/editace/mazání filmu, režiséra, herce,...
+- [x] tvůrce
+ - [x] vkládání
+ - [x] editace
+ - [x] mazání
+- [ ] film
+  - [ ] vkládání
+  - [ ] editace
+  - [ ] mazání
+- [ ] film  # TODO
+  - [ ] vkládání  # TODO
+  - [ ] editace  # TODO
+  - [ ] mazání  # TODO
 - [ ] hodnocení filmu
 - [ ] filtrování filmů na základě: 
-  - [x] žánru, (viewer/genre-detail)
-  - [ ] roku, 
-  - [x] herce, 
-  - [x] země 
+ - [x] žánru, (viewer/genre-detail)
+ - [ ] roku, 
+ - [x] herce, 
+ - [ ] země  # TODO
 - [ ] seřazení filmů podle ratingu, roku,...
 - [ ] vyhledávání filmu/režiséra/herce...
 
@@ -70,72 +81,72 @@ python manage.py startapp viewer
 ### Modely
 
 - [x] genre
-  - [x] id
-  - [x] name
+ - [x] id
+ - [x] name
 - [x] country
-  - [x] id
-  - [x] name
+ - [x] id
+ - [x] name
 - [ ] creator
-  - [x] id
-  - [x] first_name
-  - [x] last_name
-  - [x] date_of_birth
-  - [x] date_of_death
-  - [x] nationality -> country
-  - [x] biography
-  - [ ] awards (n:m -> award)
-  - [ ] movies_actor (n:m -> movie)
-  - [ ] movies_director (n:m -> movie)
+ - [x] id
+ - [x] first_name
+ - [x] last_name
+ - [x] date_of_birth
+ - [x] date_of_death
+ - [x] nationality -> country
+ - [x] biography
+ - [ ] awards (n:m -> award)
+ - [ ] movies_actor (n:m -> movie)
+ - [ ] movies_director (n:m -> movie)
 - [ ] movie
-  - [x] id
-  - [x] title_orig
-  - [x] title_cz
-  - [x] year
-  - [x] length (min)
-  - [ ] novel_id -> novel
-  - [ ] productions (n:m -> production_company)
-  - [x] directors (n:m -> creator)
-  - [x] actors (n:m -> creator)
-  - [x] countries (n:m -> country)
-  - [x] genres (n:m -> genre)
-  - [ ] rating
-  - [ ] medias (n:m -> media)
-  - [ ] awards (n:m -> award)
-  - [x] description
-  - [ ] reviews -> review
+ - [x] id
+ - [x] title_orig
+ - [x] title_cz
+ - [x] year
+ - [x] length (min)
+ - [ ] novel_id -> novel
+ - [ ] productions (n:m -> production_company)
+ - [x] directors (n:m -> creator)
+ - [x] actors (n:m -> creator)
+ - [x] countries (n:m -> country)
+ - [x] genres (n:m -> genre)
+ - [ ] rating
+ - [ ] medias (n:m -> media)
+ - [ ] awards (n:m -> award)
+ - [x] description
+ - [ ] reviews -> review
 - [ ] review
-  - [ ] id
-  - [ ] movie_id -> movie
-  - [ ] reviewer -> user 
-  - [ ] rating
-  - [ ] comment 
-  - [ ] time  
+ - [ ] id
+ - [ ] movie_id -> movie
+ - [ ] reviewer -> user 
+ - [ ] rating
+ - [ ] comment 
+ - [ ] time  
 - [ ] award
-  - [ ] id
-  - [ ] name (-> award_name)
-  - [ ] category (-> category_name)
-  - [ ] year 
+ - [ ] id
+ - [ ] name (-> award_name)
+ - [ ] category (-> category_name)
+ - [ ] year 
 - [ ] production_company
-  - [ ] id
-  - [ ] name
-  - [ ] foundation_year
-  - [ ] country_id
+ - [ ] id
+ - [ ] name
+ - [ ] foundation_year
+ - [ ] country_id
 - [ ] novel
-  - [ ] id  
-  - [ ] title
-  - [ ] author -> creator
+ - [ ] id  
+ - [ ] title
+ - [ ] author -> creator
 - [ ] user
-  - [ ] id
-  - [ ] username
-  - [ ] first_name
-  - [ ] last_name
+ - [ ] id
+ - [ ] username
+ - [ ] first_name
+ - [ ] last_name
 - [ ] media
-  - [ ] id
-  - [ ] type (image/video/text/sound)
-  - [ ] url
-  - [ ] movie_id -> movie
-  - [ ] actors (n:m -> creators)
-  - [ ] description
+ - [ ] id
+ - [ ] type (image/video/text/sound)
+ - [ ] url
+ - [ ] movie_id -> movie
+ - [ ] actors (n:m -> creators)
+ - [ ] description
 
 ### Migrace
 Při každé změně v modelech musíme provést migraci databáze:
@@ -256,44 +267,44 @@ scifi.save()
 # Finální projekt - rady
 
 - jeden člen týmu vytvoří projekt
-  - nainstaluje Django:
+- nainstaluje Django:
 ```bash
 pip install django
 ```
-  - vytvoří soubor requirements.txt
+- vytvoří soubor requirements.txt
 ```bash
 pip freeze > requirements.txt
 ```
-  - vytvoří Django projekt
+- vytvoří Django projekt
 ```bash
 django-admin startproject <nazev_projektu> . 
 ```
-  - nainstaluje dotenv:
+- nainstaluje dotenv:
 ```bash
 pip install python-dotenv
 ```
-  - vytvoří soubor `.env`, který bude obsahovat citlivé informace
-  - vytvoří git repozitář
-    - vytvoří .gitignore soubor 
-    - do .gitignore vloží:
-    ```git
-    /.idea/*
-    /db.sqlite3
-    /.env
-    ```
-    - odešle ho na GitHub
-    - nasdílí ostatním členům v týmu adresu repozitáře
-    - nastaví spolupracovníky (Settings -> Collaborators -> Add people)
+- vytvoří soubor `.env`, který bude obsahovat citlivé informace
+- vytvoří git repozitář
+- vytvoří .gitignore soubor 
+- do .gitignore vloží:
+```git
+   /.idea/*
+   /db.sqlite3
+   /.env
+   ```
+- odešle ho na GitHub
+- nasdílí ostatním členům v týmu adresu repozitáře
+- nastaví spolupracovníky (Settings -> Collaborators -> Add people)
 - ostatní členové
-  - naklonují si projekt
-  - vytvoří virtuální prostředí (.venv)
-  - nainstalují potřebné balíčky ze souboru requirements.txt
-  - vytvoří `.env` soubor obsahující SECURITY_KEY
+- naklonují si projekt
+- vytvoří virtuální prostředí (.venv)
+- nainstalují potřebné balíčky ze souboru requirements.txt
+- vytvoří `.env` soubor obsahující SECURITY_KEY
 ```bash
 pip install -r requirements.txt
 ```
 - vytvořit readme.md soubor
-  - popis projektu
-  - může být anglicky (preferováno) nebo česky
-  - může obsahovat ER diagram
-  - může obsahovat screenshoty
+- popis projektu
+- může být anglicky (preferováno) nebo česky
+- může obsahovat ER diagram
+- může obsahovat screenshoty

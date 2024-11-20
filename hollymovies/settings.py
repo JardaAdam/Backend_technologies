@@ -58,6 +58,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'hollymovies.urls'
 
+
+#
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -114,9 +116,9 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True   # mezinarodni preklady
 
-USE_TZ = True
+USE_TZ = True  # time zone
 
 
 # Static files (CSS, JavaScript, Images)

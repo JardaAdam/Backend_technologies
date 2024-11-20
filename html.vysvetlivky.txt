@@ -6,3 +6,5 @@
 
 {% if not forloop.last %},  {% endif %}
       <!--pokud chci carku mezi jmeny hercu ale ne za poslednim-->
+
+

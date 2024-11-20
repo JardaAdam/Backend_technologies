@@ -15,3 +15,21 @@ Cleanup a validation!!!
 muzeme zadavat ruzne funkce pro kontrolu a upravu textu ktery uzivatel zadal
 
 
+da se pracovat se strukturou formulare a rozlozenim chybovich hlasek atd.
+
+Forms own design
+
+Tags {%   %}
+
+Variables {{  }}
+
+
+Filters
+
+umornuji v html souboru upravovat zobrazovani dat
+
+
+i18n vicejazycne preklady
+
+
+
