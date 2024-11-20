@@ -1,0 +1,7 @@
+napsat testy hned po tom co napisu funkcionalitu !!
+
+testy napisu vzdy v aktualni branch a pak se merguje spolecne s kodem do Dev
+
+3 druhy testu: testy na forms.py
+               testy na model.py
+               testy na gui =

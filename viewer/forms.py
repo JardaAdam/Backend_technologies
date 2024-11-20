@@ -1,3 +1,9 @@
+import re
+from datetime import date
+
+
+from django.core.exceptions import ValidationError
+from django.db.models.expressions import result
 from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
 
 from viewer.models import Country, Creator
@@ -7,6 +13,7 @@ from viewer.models import Country, Creator
 # formular pro tvurce pomoci teto definice se nam automaticky vygeneruje formular.html
 
 """
+# tento formular neni vhodny pro rozvijejici se aplikace 
 class CreatorForm(Form):
     first_name = CharField(max_length=32, required=False)
     last_name = CharField(max_length=32, required=False)
@@ -15,7 +22,7 @@ class CreatorForm(Form):
     nationality = ModelChoiceField(queryset=Country.objects, required=False)
     biography = CharField(widget=Textarea, required=False)
 """
-
+# tato class cerpa rovnou z modelu a upravy delam pouze na jednom miste a to v models.py
 class CreatorForm(ModelForm):
 
     class Meta:
@@ -37,3 +44,64 @@ class CreatorForm(ModelForm):
     date_of_death = DateField(required=False, widget=NumberInput(attrs={'type': 'date'}), label='Datum umrtí')
     # nationality = ModelChoiceField(queryset=Country.objects, required=False)
     # biography = CharField(widget=Textarea, required=False)
+
+    # funkce pro kontrolu vlozenych dat a jejich uprava
+
+    # pro jednu polozku
+    # osetruje velke pismeno -> i kdyz uzivatel zada male prvni pismeno upravi e na velke
+    def clean_first_name(self):
+        initial = self.cleaned_data['first_name']
+        print(f"initial: {initial}")
+        result = initial            # pokud je pole prazdne vipise None
+        if initial:
+            result = initial.capitalize()
+            print(f"result: {result}")
+        return result
+
+    def clean_last_name(self):
+        """ Upraví zadané příjmení tak, aby začínalo velkým písmenem. """
+        initial = self.cleaned_data['last_name']
+        print(f"Initial = '{initial}'")
+        result = initial
+        if initial:
+            result = initial.capitalize()
+            print(f"result  = '{result}'")
+        return result
+
+    def clean_date_of_birth(self):
+        initial = self.cleaned_data['date_of_birth']
+        if initial and initial >= date.today():  # pokud je datum zadane a je vjetsi nebo rovne aktualnimu datu
+            raise ValidationError(" Nelze zadavat datum v budoucnosti")
+        return initial
+
+    def clean_date_of_death(self):
+        initial = self.cleaned_data['date_of_death']
+        if initial and initial >= date.today():
+            raise ValidationError(" Nelze zadavat datum v budoucnosti")
+        return initial
+
+    def clean_biography(self):
+        # Force each sentence of the biography to be capitalized.
+        initial = self.cleaned_data['biography']
+        sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
+        return '. '.join(sentence.capitalize() for sentence in sentences)
+
+
+
+    # funkce ktera pracuje s vice polozkami najednou
+    # osetruje povinost zadat minimalne jedno jmeno
+    def clean(self):
+        cleaned_data = super().clean()  # vicistim si data pred spustenim funkce.
+        initial_first_name = cleaned_data['first_name']
+        initial_last_name = cleaned_data['last_name']
+        if not initial_first_name and not initial_last_name:
+            raise ValidationError(" Je potreba zadat minimalne jedno jmeno ")
+        # porovnava datum narozeni a umrti
+        initial_date_of_birth = cleaned_data['date_of_birth']
+        initial_date_of_death = cleaned_data['date_of_death']
+        if initial_date_of_birth and initial_date_of_death and initial_date_of_death <= initial_date_of_birth:
+            raise ValidationError(" nelze umrit pred narozenim :)")
+
+        return self.cleaned_data
+
+

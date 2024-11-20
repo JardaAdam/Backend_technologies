@@ -9,3 +9,9 @@ v tomto souboru se daji osetrit zadavana data - umrti pred narozenim, narozeni v
 urls.py
 je potreba zadat cestu k formulari do souboru !! cesta neni primo do form.py ale do views.py a tam se
 class CreatorFormView(FormView): odkazuje do forms.py na class CreatorForm(ModelForm):
+
+
+Cleanup a validation!!!
+muzeme zadavat ruzne funkce pro kontrolu a upravu textu ktery uzivatel zadal
+
+

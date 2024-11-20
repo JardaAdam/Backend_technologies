@@ -46,7 +46,7 @@ class Creator(Model):
     updated = DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['last_name', 'first_name', 'date_of_birth']
+        ordering = ['first_name','last_name', 'date_of_birth']
 
     def __repr__(self):
         return f"Creator(first_name=({self.first_name}, last_name={self.first_name}, date_of_birth={self.date_of_birth})"
