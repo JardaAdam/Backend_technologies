@@ -18,17 +18,23 @@ from django.contrib import admin
 from django.urls import path
 
 from viewer.views import movies, home, movie, creator, genre, country, MoviesView, MoviesTemplateView, CreatorsListView, \
-    CreatorFormView, CreatorCreateView, CreatorUpdateView, CreatorDeleteView
+    CreatorFormView, CreatorCreateView, CreatorUpdateView, CreatorDeleteView, MoviesListView, MovieCreateView, \
+    MovieUpdateView, MovieDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', home, name='home'),
-
+#FIXME kdyz pridam film pomoci movie/create musim vypnout a zapnout server aby se film
+# zobrazil na strance v /movies/ kdyz zmenim movies/ z MoviesTemplateView na MoviesListView problem zmizi.
     #path('movies/', movies, name='movies'),
     #path('movies/', MoviesView.as_view(), name='movies'),
-    path('movies/', MoviesTemplateView.as_view(), name='movies'),
-    # path('movies/', MoviesListView.as_view(), name='movies'),
+    # path('movies/', MoviesTemplateView.as_view(), name='movies'),
+    path('movies/', MoviesListView.as_view(), name='movies'),
+    path('movie/create/', MovieCreateView.as_view(), name='movie_create'),
+    path('movie/update/<int:pk>/', MovieUpdateView.as_view(), name='movie_update'),
+    path('movie/delete/<int:pk>/', MovieDeleteView.as_view(), name='movie_delete'),
+
     path('movie/<pk>/', movie, name='movie'),
 
     path('creators/', CreatorsListView.as_view(), name='creators'),

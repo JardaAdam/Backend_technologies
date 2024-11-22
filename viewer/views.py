@@ -4,14 +4,14 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView
 
-from viewer.forms import CreatorForm
+from viewer.forms import CreatorForm, MovieForm
 from viewer.models import Movie, Creator, Genre, Country
 
 
 def home(request):
     return render(request, "home.html")
 
-
+""" Movie"""
 def movies(request):
     # movies_list = Movie.objects.all()   """ vytahnu z databaze """
     # context = {'movies': movies_list}     """ vlozim do context """
@@ -62,7 +62,37 @@ def movie(request, pk):
         return render(request, "movie.html", context)
     return movies(request)  # osetreni co se stane kdyz film s hledanym nazvem neexistuje
 
+""" Vkladani """
 
+class MovieCreateView(CreateView):
+    template_name = "form.html"
+    form_class = MovieForm
+    success_url = reverse_lazy("movies")
+
+    def form_invalid(self, form):
+        print("Form is invalid")
+        return super().form_invalid(form)
+
+""" Uprava dat Filmu """
+class MovieUpdateView(UpdateView):
+    template_name = "form.html"
+    form_class = MovieForm
+    success_url = reverse_lazy("movies")
+    model = Movie
+
+    def form_invalid(self, form):
+        print("Form is invalid")
+        return super().form_invalid(form)
+
+""" Mazani dat Filmu"""
+
+class MovieDeleteView(DeleteView):
+    template_name = "confirm_delete.html"
+    model = Movie
+    success_url = reverse_lazy("movies")
+
+
+""" Creator"""
 # nahrada za def creators
 class CreatorsListView(ListView):
     template_name = "creators.html"

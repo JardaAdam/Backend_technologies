@@ -6,11 +6,52 @@ from django.core.exceptions import ValidationError
 from django.db.models.expressions import result
 from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
 
-from viewer.models import Country, Creator
+from viewer.models import Country, Creator, Movie
 
 
 # pozor z ceho importuji!! zde importuji z django.form!!
 # formular pro tvurce pomoci teto definice se nam automaticky vygeneruje formular.html
+
+class MovieForm(ModelForm):
+    class Meta:
+        model = Movie
+        fields = '__all__'
+
+        help_texts = {
+            'description': "Zde zadejte text k filmu."
+        }
+        error_messages = {
+
+        }
+# TODO pridat zapis pro vybrani vice reziseru a vice hercu a moznost pridat nove creator
+
+    """ Ošetření zapisu"""
+    def clean_title_orig(self):
+        initial = self.cleaned_data['title_orig']
+        result = initial
+        if initial:
+            result = initial.title()
+        return result
+
+    def clean_title_cz(self):
+        initial = self.cleaned_data['title_cz']
+        result = initial
+        if initial:
+            result = initial.title()
+        return result
+
+    def clean_year(self):
+        initial = self.cleaned_data['year']
+        result = initial
+        if initial and initial > date.today().year:
+            raise ValidationError(" Film nemůže být natočen v budoucnu!!")
+        return result
+
+    def clean_description(self):
+        initial = self.cleaned_data['description']
+        sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
+        return '. '.join(sentence.capitalize() for sentence in sentences)
+
 
 """
 # tento formular neni vhodny pro rozvijejici se aplikace 
@@ -44,7 +85,7 @@ class CreatorForm(ModelForm):
     date_of_death = DateField(required=False, widget=NumberInput(attrs={'type': 'date'}), label='Datum umrtí')
     # nationality = ModelChoiceField(queryset=Country.objects, required=False)
     # biography = CharField(widget=Textarea, required=False)
-
+    """ Tento kód zajišťuje, že všechna viditelná pole formuláře budou mít přidanou CSS třídu form-control """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():

@@ -64,7 +64,7 @@ class Movie(Model):
     title_cz = CharField(max_length=64, null=True, blank=True)
     year = IntegerField(null=True, blank=True)
     length = IntegerField(null=True, blank=True)
-    directors = ManyToManyField(Creator, blank=True, related_name='directing')
+    directors = ManyToManyField("viewer.Creator", blank=True, related_name='directing')
     actors = ManyToManyField("viewer.Creator", blank=True, related_name='acting')
     """ odkazuje na tabulku ktera je vytvorena az po teto tabulce"""
     countries = ManyToManyField(Country, blank=True, related_name='movies')
@@ -83,8 +83,13 @@ class Movie(Model):
         return f"{self.title_orig} ({self.year})"
 
     def length_format(self):
+        # Kontrola, zda je `self.length` definována a je to platná hodnota
+        if not self.length:
+            return "Neznámá délka"  # Nebo jakákoliv jiná výchozí hodnota
         hours = self.length // 60
         minutes = self.length % 60
         if minutes < 10:
             minutes = f"0{minutes}"
         return f"{hours}:{minutes}"
+
+
