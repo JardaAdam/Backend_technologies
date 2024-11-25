@@ -1,3 +1,9 @@
 pk = Primari key
 
 vytvareni trid -> model.py -> views.py -> urls.py
+
+
+
+
+hesla ulozene v auth_user a jsou za hashovana
+takze ani admin nevidi realne heslo
