@@ -308,3 +308,39 @@ pip install -r requirements.txt
 - může být anglicky (preferováno) nebo česky
 - může obsahovat ER diagram
 - může obsahovat screenshoty
+
+
+## Poznamky k projektu 
+
+### HTML
+- komentář
+```djangourlpath
+{% comment %} {% endcomment %}
+```
+
+
+- account 
+
+#### permisions 
+- pro prihlaseneho uzivatele 
+```djangourlpath
+{% if user.is_authenticated %}
+{% else %}
+{% endif %}
+```
+- permision add pro uzivatele
+```djangourlpath
+{% if perms.viewer.add_creator %}
+{% endif %}
+```
+- permision change
+```djangourlpath
+{% if perms.viewer.change_movie %}
+{% endif %}
+```
+
+- permision delete 
+```djangourlpath
+{% if perms.viewer.delete_movie %}
+{% endif %}
+```

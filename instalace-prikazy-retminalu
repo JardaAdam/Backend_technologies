@@ -4,3 +4,6 @@ cd .\.venv\
 .\Scripts\activate
 python manage.py createsuperuser => vitvoreni administratora pro projekt
 python manage.py runserver => spustim server
+
+" Vytvoreni nove aplikace "
+python manage.py startapp accounts

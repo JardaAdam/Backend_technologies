@@ -40,7 +40,11 @@
     </div>
     <br>
     <hr>
+    {% if perms.viewer.change_movie %}
     <a href="{% url 'movie_update' movie.id%}" class="btn btn-primary">Aktualizovat</a>
+    {% endif %}
+    {% if perms.viewer.delete_movie %}
     <a href="{% url 'movie_delete' movie.id%}" class="btn btn-danger">smazat</a>
+    {% endif %}
 
 {% endblock %}

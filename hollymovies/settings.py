@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 
     'django_dump_load_utf8',
 
+
+    'accounts',
     'viewer',
 ]
 
@@ -130,3 +132,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+""" Prihlasovaci odkazy pro aplikaci accounts"""
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

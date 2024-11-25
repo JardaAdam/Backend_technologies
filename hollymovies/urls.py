@@ -15,20 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.contrib.auth.views import LogoutView
+from django.urls import path, include
 
+from accounts.views import SubmittableLoginView, SignUpView, user_logout
 from viewer.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', home, name='home'),
-#FIXME kdyz pridam film pomoci movie/create musim vypnout a zapnout server aby se film
-# zobrazil na strance v /movies/ kdyz zmenim movies/ z MoviesTemplateView na MoviesListView problem zmizi.
+
     #path('movies/', movies, name='movies'),
     #path('movies/', MoviesView.as_view(), name='movies'),
     path('movies/', MoviesTemplateView.as_view(), name='movies'),
-    # Fixme nezobrazuji se filmy pod nadpisem kouknout na to!!
     #path('movies/', MoviesListView.as_view(), name='movies'),
     path('movie/create/', MovieCreateView.as_view(), name='movie_create'),
     path('movie/update/<int:pk>/', MovieUpdateView.as_view(), name='movie_update'),
@@ -51,4 +51,9 @@ urlpatterns = [
     path('country/update/<pk>/', CountryUpdateView.as_view(), name='country_update'),
     path('country/delete/<pk>/', CountryDeleteView.as_view(), name='country_delete'),
     path('country/<pk>/', country, name='country'),
+
+    #path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
+    path('accounts/logout/', user_logout, name='logout'),     # zde je odkaz na lokalni funkci logout z account/viewes.py
+    path('accounts/', include('django.contrib.auth.urls')), # defaultní cesty a views z Djanga
 ]

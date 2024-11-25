@@ -6,13 +6,20 @@
             <a href="{% url 'genre' genre.id %}">{{ genre }} ({{ genre.movies.count }})</a>{% if not forloop.last %}, {% endif %}
         {% endif %}
     {% endfor %}
-<h1>Seznam filmů <a href="{% url 'movie_create' %}" >📝</a></h1>
+<h1>Seznam filmů {% if perms.viewer.add_movie %}
+        <a href="{% url 'movie_create' %}">📝</a>
+ {% endif %}</h1>
+<hr>
     <ul>
-        {% for movie in object_list %}
+        {% for movie in movies %}
             <li>
-                <a href="{% url 'movie' movie.id %}">{{ movie }}</a>
-                <a href="{% url 'movie_update' movie.id%}" >🖊️</a>
-                <a href="{% url 'movie_delete' movie.id%}" >🗑️</a>
+                    <a href="{% url 'movie' movie.id %}">{{ movie }}</a>
+                {% if perms.viewer.change_movie %}
+                    <a href="{% url 'movie_update' movie.id%}" >🖊️</a>
+                {% endif %}
+                {% if perms.viewer.delete_movie %}
+                    <a href="{% url 'movie_delete' movie.id%}" >🗑️</a>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>

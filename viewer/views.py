@@ -1,4 +1,4 @@
-from django.db.models.expressions import result
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -11,7 +11,10 @@ from viewer.models import Movie, Creator, Genre, Country, Country
 def home(request):
     return render(request, "home.html")
 
+
 """ Movie"""
+
+
 def movies(request):
     # movies_list = Movie.objects.all()   """ vytahnu z databaze """
     # context = {'movies': movies_list}     """ vlozim do context """
@@ -41,7 +44,7 @@ class MoviesTemplateView(TemplateView):
 
 ## ListView
 # pracuji zde rovnou s template a modelem.
-#je zde obecna promena (object_list)
+# je zde obecna promena (object_list)
 # je slozitejsi do template posilat data z vice tabulek
 # vhodne pro jednoduche seznami
 class MoviesListView(ListView):
@@ -62,37 +65,49 @@ def movie(request, pk):
         return render(request, "movie.html", context)
     return movies(request)  # osetreni co se stane kdyz film s hledanym nazvem neexistuje
 
+
 """ Vkladani """
 
-class MovieCreateView(CreateView):
+
+class MovieCreateView(PermissionRequiredMixin, CreateView):
     template_name = "form.html"
     form_class = MovieForm
     success_url = reverse_lazy("movies")
+    permission_required = 'viewer.add_movie'
 
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
 
+
 """ Uprava dat Filmu """
-class MovieUpdateView(UpdateView):
+
+
+class MovieUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = "form.html"
     form_class = MovieForm
     success_url = reverse_lazy("movies")
     model = Movie
+    permission_required = 'viewer.change_movie'
 
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
+
 
 """ Mazani dat Filmu"""
 
-class MovieDeleteView(DeleteView):
+
+class MovieDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "confirm_delete.html"
     model = Movie
     success_url = reverse_lazy("movies")
+    permission_required = 'viewer.delete_movie'
 
 
 """ Creator"""
+
+
 # nahrada za def creators
 class CreatorsListView(ListView):
     template_name = "creators.html"
@@ -108,11 +123,14 @@ def creator(request, pk):
     except:
         return home(request)
 
+
 ## Formulare
 # pouzivaji se pro uzivatelskou praci s daty
 # najdu v form.py
 
 """ Vkladani """
+
+
 class CreatorFormView(FormView):
     template_name = "form.html"
     form_class = CreatorForm  # odkazuje se na forms.py CreatorForm(ModelForm)
@@ -123,7 +141,7 @@ class CreatorFormView(FormView):
         print("Form is valid")
         result = super().form_valid(form)
         cleaned_data = form.cleaned_data
-        Creator.objects.create(             # touto funkci vytahnu data z formulare a vlozim je do databaze
+        Creator.objects.create(  # touto funkci vytahnu data z formulare a vlozim je do databaze
             first_name=cleaned_data['first_name'],
             last_name=cleaned_data['last_name'],
             date_of_birth=cleaned_data['date_of_birth'],
@@ -132,42 +150,48 @@ class CreatorFormView(FormView):
             biography=cleaned_data['biography'],
         )
         return result
+
     # tato funkce vypisuje chybovou hlasku pokud nejsou data zadana spravne
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
 
+
 # zjednoduseny zapis predesle class cerpa data z models.py
 # pokud upravuji v models.py nejake data u Model propise se mi to v cele funkcnosti kodu napr. upravi se struktura formulare
-class CreatorCreateView(CreateView):
+class CreatorCreateView(PermissionRequiredMixin, CreateView):
     template_name = "form.html"
-    form_class = CreatorForm        # forms.py
+    form_class = CreatorForm  # forms.py
     success_url = reverse_lazy('creators')  # presmerovava po odeslani formulare na zadanou url
-
+    permission_required = 'viewer.add_creator'
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
 
+
 """ Uprava dat"""
-class CreatorUpdateView(UpdateView):    # musim pridat url do urls.py
+
+
+class CreatorUpdateView(PermissionRequiredMixin, UpdateView):  # musim pridat url do urls.py
     template_name = "form.html"
     form_class = CreatorForm
     success_url = reverse_lazy('creators')
     model = Creator
-
-
+    permission_required = 'viewer.change_creator'
 
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
 
+
 """ Mazani dat """
-class CreatorDeleteView(DeleteView):
+
+
+class CreatorDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "confirm_delete.html"
     success_url = reverse_lazy('creators')
     model = Creator
-
-
+    permission_required = 'viewer.delete_creator'
 
 def genre(request, pk):
     try:
@@ -175,50 +199,65 @@ def genre(request, pk):
     except:
         return home(request)
 
-class GenreCreateView(CreateView):
+
+class GenreCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = GenreModelForm
     success_url = reverse_lazy('home')
+    permission_required = 'viewer.add_genre'
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
-class GenreUpdateView(UpdateView):
+
+
+class GenreUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     form_class = GenreModelForm
     success_url = reverse_lazy('home')
     model = Genre
+    permission_required = 'viewer.change_genre'
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
-class GenreDeleteView(DeleteView):
+
+
+class GenreDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "confirm_delete.html"
     model = Genre
     success_url = reverse_lazy('home')
+    permission_required = 'viewer.delete_genre'
 
-
-class CountryCreateView(CreateView):
+class CountryCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = CountryModelForm
     success_url = reverse_lazy('home')
+    permission_required = 'viewer.add_country'
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
-class CountryUpdateView(UpdateView):
+
+
+class CountryUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'form.html'
     form_class = CountryModelForm
     success_url = reverse_lazy('home')
     model = Country
+    permission_required = 'viewer.change_country'
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
-class CountryDeleteView(DeleteView):
+
+
+class CountryDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "confirm_delete.html"
     model = Country
     success_url = reverse_lazy('home')
+    permission_required = 'viewer.delete_country'
+
 
 def country(request, pk):
     try:
-        return render(request, "country.html", {'country': Country.objects.get(id=pk)})
+        return render(request, 'country.html', {'country': Country.objects.get(id=pk)})
     except:
         return home(request)
 # TODO tato funkce funguje pouze pro filmy ale ne pro Actors!!
