@@ -17,9 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from viewer.views import movies, home, movie, creator, genre, country, MoviesView, MoviesTemplateView, CreatorsListView, \
-    CreatorFormView, CreatorCreateView, CreatorUpdateView, CreatorDeleteView, MoviesListView, MovieCreateView, \
-    MovieUpdateView, MovieDeleteView
+from viewer.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,8 +27,9 @@ urlpatterns = [
 # zobrazil na strance v /movies/ kdyz zmenim movies/ z MoviesTemplateView na MoviesListView problem zmizi.
     #path('movies/', movies, name='movies'),
     #path('movies/', MoviesView.as_view(), name='movies'),
-    # path('movies/', MoviesTemplateView.as_view(), name='movies'),
-    path('movies/', MoviesListView.as_view(), name='movies'),
+    path('movies/', MoviesTemplateView.as_view(), name='movies'),
+    # Fixme nezobrazuji se filmy pod nadpisem kouknout na to!!
+    #path('movies/', MoviesListView.as_view(), name='movies'),
     path('movie/create/', MovieCreateView.as_view(), name='movie_create'),
     path('movie/update/<int:pk>/', MovieUpdateView.as_view(), name='movie_update'),
     path('movie/delete/<int:pk>/', MovieDeleteView.as_view(), name='movie_delete'),
@@ -43,6 +42,13 @@ urlpatterns = [
     path('creator/delete/<pk>/', CreatorDeleteView.as_view(), name='creator_delete'),
     path('creator/<pk>/', creator, name='creator'),  # musime dodrzet spravne poradi cest !!
 
+    path('genre/create/', GenreCreateView.as_view(), name='genre_create'),
+    path('genre/update/<pk>/', GenreUpdateView.as_view(), name='genre_update'),
+    path('genre/delete/<pk>/', GenreDeleteView.as_view(), name='genre_delete'),
     path('genre/<pk>/', genre, name='genre'),
+
+    path('country/create/', CountryCreateView.as_view(), name='country_create'),
+    path('country/update/<pk>/', CountryUpdateView.as_view(), name='country_update'),
+    path('country/delete/<pk>/', CountryDeleteView.as_view(), name='country_delete'),
     path('country/<pk>/', country, name='country'),
 ]

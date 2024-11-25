@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.expressions import result
 from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
 
-from viewer.models import Country, Creator, Movie
+from viewer.models import Country, Creator, Movie, Genre
 
 
 # pozor z ceho importuji!! zde importuji z django.form!!
@@ -151,4 +151,83 @@ class CreatorForm(ModelForm):
 
         return self.cleaned_data
 
-
+class GenreModelForm(ModelForm):
+    class Meta:
+        model = Genre
+        fields = '__all__'
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if name:
+            name = name.strip()
+            name = name.capitalize()
+        return name
+class CountryModelForm(ModelForm):
+    class Meta:
+        model = Country
+        fields = '__all__'
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if name:
+            name = name.strip()
+            name = name.capitalize()
+        return name
+class MovieModelForm(ModelForm):
+    class Meta:
+        model = Movie
+        fields = ['title_orig', 'title_cz', 'year', 'length', 'directors', 'actors', 'countries', 'genres',
+                  'description']
+        labels = {
+            'title_orig': 'Originální název',
+            'title_cz': 'Český název',
+            'year': 'Rok',
+            'length': 'Délka (min)',
+            'directors': 'Režie',
+            'actors': 'Herecké obsazení',
+            'countries': 'Země',
+            'genres': 'Žánry',
+            'description': 'Popis',
+        }
+        help_texts = {
+            'title_orig': 'Zadajte originální název filmu.',
+            'title_cz': 'Zadajte český název filmu (pokud existuje).',
+            'year': 'Zadajte rok vydání filmu.',
+            'length': 'Délka filmu v minutách.',
+            'description': 'Popis filmu, stručný obsah nebo jiné detaily.',
+        }
+        error_messages = {
+            'title_orig': {
+                'required': 'Tento údaj je povinný.',
+            },
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+    def clean_title_orig(self):
+        title_orig = self.cleaned_data['title_orig']
+        if title_orig:
+            title_orig = title_orig.strip()
+            title_orig = title_orig.capitalize()
+        return title_orig
+    def clean_title_cz(self):
+        title_cz = self.cleaned_data['title_cz']
+        if title_cz:
+            title_cz = title_cz.strip()
+            title_cz = title_cz.capitalize()
+        return title_cz
+    def clean_year(self):
+        year = self.cleaned_data['year']
+        if year and year > date.today().year:
+            raise ValidationError("Rok filmu nemůže být v budoucnosti.")
+        return year
+    def clean_length(self):
+        length = self.cleaned_data['length']
+        if length and length <= 0:
+            raise ValidationError("Déžka filmu musí být větší než 0.")
+        return length
+    def clean(self):
+        cleaned_data = super().clean()
+        title_orig = cleaned_data.get('title_orig')
+        if not title_orig:
+            raise ValidationError("Originální název je povinný.")
+        return cleaned_data

@@ -1,1 +1,3 @@
 pk = Primari key
+
+vytvareni trid -> model.py -> views.py -> urls.py
