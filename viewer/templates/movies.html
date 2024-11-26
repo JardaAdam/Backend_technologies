@@ -12,15 +12,26 @@
 <hr>
     <ul>
         {% for movie in movies %}
-            <li>
-                    <a href="{% url 'movie' movie.id %}">{{ movie }}</a>
+            <div class="d-flex align-items-center mb-1">
+                    <a href="{% url 'movie' movie.id %}" class="mr-1">{{ movie }} </a>
+                    <div class="rating d-flex">
+                        ({{ movie.avg_rating|default:"0" }})
+                     </div>
+
+                    <!-- Počet recenzí -->
+                    <div class="ml-1 text-muted">
+                        <i class="fas fa-comments"></i> {{ movie.review_count }} Reviews
+                    </div>
+
                 {% if perms.viewer.change_movie %}
-                    <a href="{% url 'movie_update' movie.id%}" >🖊️</a>
+                    <a href="{% url 'movie_update' movie.id%}" class="ml-1">🖊️</a>
                 {% endif %}
                 {% if perms.viewer.delete_movie %}
-                    <a href="{% url 'movie_delete' movie.id%}" >🗑️</a>
+                    <a href="{% url 'movie_delete' movie.id%}" class="ml-1">🗑️</a>
                 {% endif %}
-            </li>
+
+            </div>
+            <hr>
         {% endfor %}
     </ul>
 {% endblock %}

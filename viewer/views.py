@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -41,7 +41,18 @@ class MoviesView(View):
 # nahrada za def movies pracuje rovnou s template ale pracuji s databazi rucne (extra_context)
 class MoviesTemplateView(TemplateView):
     template_name = "movies.html"
-    extra_context = {'movies': Movie.objects.all(), 'genres': Genre.objects.all()}
+    extra_context = {'genres': Genre.objects.all()}
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Načtení filmů s jejich průměrným hodnocením a počtem recenzí
+        movies_avg_count = Movie.objects.annotate(avg_rating=Avg('reviews__rating'),
+                                                  review_count=Count('reviews'))
+
+        # Přidání dat do kontextu
+        context['movies'] = movies_avg_count
+        context['genres'] = Genre.objects.all()
+        return context
 
 
 
