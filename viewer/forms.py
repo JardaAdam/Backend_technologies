@@ -23,7 +23,6 @@ class MovieForm(ModelForm):
         error_messages = {
 
         }
-# TODO pridat zapis pro vybrani vice reziseru a vice hercu a moznost pridat nove creator
 
     """ Ošetření zapisu"""
     def clean_title_orig(self):

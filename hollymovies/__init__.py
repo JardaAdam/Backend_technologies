@@ -1,1 +1,0 @@
-# TODO zeptat se jak se zapina dj v horni liste vedle run
