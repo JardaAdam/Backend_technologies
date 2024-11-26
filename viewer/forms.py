@@ -1,12 +1,11 @@
 import re
 from datetime import date
 
-
 from django.core.exceptions import ValidationError
 from django.db.models.expressions import result
 from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
 
-from viewer.models import Country, Creator, Movie, Genre
+from viewer.models import Country, Creator, Movie, Genre, Review
 
 
 # pozor z ceho importuji!! zde importuji z django.form!!
@@ -25,6 +24,7 @@ class MovieForm(ModelForm):
         }
 
     """ Ošetření zapisu"""
+
     def clean_title_orig(self):
         initial = self.cleaned_data['title_orig']
         result = initial
@@ -62,14 +62,15 @@ class CreatorForm(Form):
     nationality = ModelChoiceField(queryset=Country.objects, required=False)
     biography = CharField(widget=Textarea, required=False)
 """
+
+
 # tato class cerpa rovnou z modelu a upravy delam pouze na jednom miste a to v models.py
 class CreatorForm(ModelForm):
-
     class Meta:
-        model = Creator   # odkazuje se do models.py na class Creator(Model)
+        model = Creator  # odkazuje se do models.py na class Creator(Model)
         fields = '__all__'
-        #fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death', 'biography']
-        #exclude = ['nationality']
+        # fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death', 'biography']
+        # exclude = ['nationality']
 
         help_texts = {
             'biography': "Zde zadejte biografii tvůrce."
@@ -85,6 +86,7 @@ class CreatorForm(ModelForm):
     # nationality = ModelChoiceField(queryset=Country.objects, required=False)
     # biography = CharField(widget=Textarea, required=False)
     """ Tento kód zajišťuje, že všechna viditelná pole formuláře budou mít přidanou CSS třídu form-control """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
@@ -98,7 +100,7 @@ class CreatorForm(ModelForm):
     def clean_first_name(self):
         initial = self.cleaned_data['first_name']
         print(f"initial: {initial}")
-        result = initial            # pokud je pole prazdne vipise None
+        result = initial  # pokud je pole prazdne vipise None
         if initial:
             result = initial.capitalize()
             print(f"result: {result}")
@@ -132,8 +134,6 @@ class CreatorForm(ModelForm):
         sentences = re.sub(r'\s*\.\s*', '.', initial).split('.')
         return '. '.join(sentence.capitalize() for sentence in sentences)
 
-
-
     # funkce ktera pracuje s vice polozkami najednou
     # osetruje povinost zadat minimalne jedno jmeno
     def clean(self):
@@ -150,26 +150,33 @@ class CreatorForm(ModelForm):
 
         return self.cleaned_data
 
+
 class GenreModelForm(ModelForm):
     class Meta:
         model = Genre
         fields = '__all__'
+
     def clean_name(self):
         name = self.cleaned_data['name']
         if name:
             name = name.strip()
             name = name.capitalize()
         return name
+
+
 class CountryModelForm(ModelForm):
     class Meta:
         model = Country
         fields = '__all__'
+
     def clean_name(self):
         name = self.cleaned_data['name']
         if name:
             name = name.strip()
             name = name.capitalize()
         return name
+
+
 class MovieModelForm(ModelForm):
     class Meta:
         model = Movie
@@ -198,35 +205,51 @@ class MovieModelForm(ModelForm):
                 'required': 'Tento údaj je povinný.',
             },
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
     def clean_title_orig(self):
         title_orig = self.cleaned_data['title_orig']
         if title_orig:
             title_orig = title_orig.strip()
             title_orig = title_orig.capitalize()
         return title_orig
+
     def clean_title_cz(self):
         title_cz = self.cleaned_data['title_cz']
         if title_cz:
             title_cz = title_cz.strip()
             title_cz = title_cz.capitalize()
         return title_cz
+
     def clean_year(self):
         year = self.cleaned_data['year']
         if year and year > date.today().year:
             raise ValidationError("Rok filmu nemůže být v budoucnosti.")
         return year
+
     def clean_length(self):
         length = self.cleaned_data['length']
         if length and length <= 0:
             raise ValidationError("Déžka filmu musí být větší než 0.")
         return length
+
     def clean(self):
         cleaned_data = super().clean()
         title_orig = cleaned_data.get('title_orig')
         if not title_orig:
             raise ValidationError("Originální název je povinný.")
         return cleaned_data
+
+
+class ReviewModelForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
+        labels = {
+            'rating': 'Hodnocení',
+            'comment': 'Komentář'
+        }

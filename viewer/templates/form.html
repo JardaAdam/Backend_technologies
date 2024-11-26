@@ -3,8 +3,8 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
-<!-- {% csrf_token %} nesmi chybet je to bezpecnosti opatreni pro ukladani do databaze pomoci tokenu
- tento koken ma omezenou delku platnosti takze pri delsim formulari osetrit data proti strate meziukladanit-->
+{% comment %} {% csrf_token %} nesmi chybet je to bezpecnosti opatreni pro ukladani do databaze pomoci tokenu
+ tento koken ma omezenou delku platnosti takze pri delsim formulari osetrit data proti strate meziukladanit{% endcomment %}
     {% comment %}{{ form }}{% endcomment %}
     <table>{{ form.as_table }}</table>
     {% comment %}{{ form.as_p }}{% endcomment %}

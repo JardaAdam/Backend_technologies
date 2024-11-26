@@ -34,7 +34,7 @@ urlpatterns = [
     path('movie/update/<int:pk>/', MovieUpdateView.as_view(), name='movie_update'),
     path('movie/delete/<int:pk>/', MovieDeleteView.as_view(), name='movie_delete'),
 
-    path('movie/<pk>/', movie, name='movie'),
+    path('movie/<pk>/', MovieTemplateView.as_view(), name='movie'),
 
     path('creators/', CreatorsListView.as_view(), name='creators'),
     path('creator/create/', CreatorCreateView.as_view(), name='creator_create'),
@@ -54,6 +54,6 @@ urlpatterns = [
 
     #path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
-    path('accounts/logout/', user_logout, name='logout'),     # zde je odkaz na lokalni funkci logout z account/viewes.py
+    path('accounts/logout/', user_logout, name='logout'),     # zde je odkaz na lokalni funkci logout z account/views.py
     path('accounts/', include('django.contrib.auth.urls')), # defaultní cesty a views z Djanga
 ]

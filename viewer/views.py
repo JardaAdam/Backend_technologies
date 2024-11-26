@@ -1,11 +1,13 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Avg
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView
 
-from viewer.forms import CreatorForm, MovieForm, GenreModelForm, CountryModelForm, MovieModelForm
-from viewer.models import Movie, Creator, Genre, Country, Country
+from accounts.models import Profile
+from viewer.forms import CreatorForm, MovieForm, GenreModelForm, CountryModelForm, MovieModelForm, ReviewModelForm
+from viewer.models import Movie, Creator, Genre, Country, Review
 
 
 def home(request):
@@ -42,6 +44,8 @@ class MoviesTemplateView(TemplateView):
     extra_context = {'movies': Movie.objects.all(), 'genres': Genre.objects.all()}
 
 
+
+
 ## ListView
 # pracuji zde rovnou s template a modelem.
 # je zde obecna promena (object_list)
@@ -64,6 +68,44 @@ def movie(request, pk):
         context = {'movie': movie_}
         return render(request, "movie.html", context)
     return movies(request)  # osetreni co se stane kdyz film s hledanym nazvem neexistuje
+
+class MovieTemplateView(TemplateView):
+    template_name = "movie.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs['pk']
+        movie_ = Movie.objects.filter(id=pk)
+        if movie_:
+            context['movie'] = movie_[0]
+            context['form_review'] = ReviewModelForm
+            rating_avg = movie_[0].reviews.aggregate(Avg('rating'))['rating__avg']
+            # print(f"rating_avg: {rating_avg}")
+            context['rating_avg'] = rating_avg
+            return context
+        return reverse_lazy('movies')
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        reviews = Review.objects.filter(movie=context['movie'],
+                                        reviewer=Profile.objects.get(user=request.user))
+        if reviews.exists():
+            review_ = reviews[0]
+            review_.rating = request.POST.get('rating')
+            review_.comment = request.POST.get('comment')
+            review_.save()
+        else:
+            Review.objects.create(
+                movie=context['movie'],
+                reviewer=Profile.objects.get(user=request.user),
+                rating=request.POST.get('rating'),
+                comment=request.POST.get('comment')
+            )
+        movie_ = context['movie']
+        rating_avg = movie_.reviews.aggregate(Avg('rating'))['rating__avg']
+        # print(f"rating_avg: {rating_avg}")
+        context['rating_avg'] = rating_avg
+        return render(request, 'movie.html', context)
 
 
 """ Vkladani """
@@ -164,6 +206,7 @@ class CreatorCreateView(PermissionRequiredMixin, CreateView):
     form_class = CreatorForm  # forms.py
     success_url = reverse_lazy('creators')  # presmerovava po odeslani formulare na zadanou url
     permission_required = 'viewer.add_creator'
+
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
@@ -193,6 +236,7 @@ class CreatorDeleteView(PermissionRequiredMixin, DeleteView):
     model = Creator
     permission_required = 'viewer.delete_creator'
 
+
 def genre(request, pk):
     try:
         return render(request, "genre.html", {'genre': Genre.objects.get(id=pk)})
@@ -205,6 +249,7 @@ class GenreCreateView(PermissionRequiredMixin, CreateView):
     form_class = GenreModelForm
     success_url = reverse_lazy('home')
     permission_required = 'viewer.add_genre'
+
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
@@ -216,6 +261,7 @@ class GenreUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('home')
     model = Genre
     permission_required = 'viewer.change_genre'
+
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
@@ -227,11 +273,13 @@ class GenreDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('home')
     permission_required = 'viewer.delete_genre'
 
+
 class CountryCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'form.html'
     form_class = CountryModelForm
     success_url = reverse_lazy('home')
     permission_required = 'viewer.add_country'
+
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
@@ -243,6 +291,7 @@ class CountryUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('home')
     model = Country
     permission_required = 'viewer.change_country'
+
     def form_invalid(self, form):
         print("Form is invalid")
         return super().form_invalid(form)
