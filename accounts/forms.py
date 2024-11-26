@@ -33,7 +33,7 @@ class SignUpForm(UserCreationForm):
                           label="Biografie",
                           required=False)
 
-    @atomic
+    @atomic # tato metoda hlida konflikty kdyby dva lidi delali registraci naraz
     def save(self, commit=True):
         self.instance.is_active = True
         user = super().save(commit)  # Creates instance od User
