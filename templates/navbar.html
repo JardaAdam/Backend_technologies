@@ -17,7 +17,7 @@
                     <div class="navbar-nav">
                         <div class="nav-item dropdown">
                                 <a class="nav-link active dropdown-toggle" href="#" data-toggle="dropdown">Přidat</a>
-                            <div class="dropdown-menu">
+                                <div class="dropdown-menu">
                                 {% if perms.viewer.add_creator %}
                                     <a class="dropdown-item" href="{% url 'creator_create' %}">tvůrce</a>
                                 {% endif %}
@@ -30,11 +30,11 @@
                                 {% if perms.viewer.add_genre %}
                                     <a class="dropdown-item" href="{% url 'genre_create' %}">žánr</a>
                                     {% endif %}
-                            </div>
+                                </div>
                         </div>
                     </div>
                 {% endif %}
-
+            </div>
                 <div class="navbar-nav ml-auto">
                     <div class="nav-item dropdown">
                         {% if user.is_authenticated %}
@@ -56,7 +56,6 @@
 
             </div>
         </div>
-    </div>
 </nav>
 
 
