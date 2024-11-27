@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView
 
 from accounts.models import Profile
-from viewer.forms import CreatorForm, MovieForm, GenreModelForm, CountryModelForm, MovieModelForm, ReviewModelForm
+from viewer.forms import CreatorForm, MovieForm, GenreModelForm, CountryModelForm, ReviewModelForm
 from viewer.models import Movie, Creator, Genre, Country, Review
 
 
@@ -29,12 +29,15 @@ def movies(request):
 
 # Class-based views
 ## View class ->
+def get(request):
+    return render(request,
+                  "movies.html",
+                  {'movies': Movie.objects.all(),
+                   'genres': Genre.objects.all()})
+
+
 class MoviesView(View):
-    def get(self, request):
-        return render(request,
-                      "movies.html",
-                      {'movies': Movie.objects.all(),
-                       'genres': Genre.objects.all()})
+    pass
 
 
 ## TemplateView class
@@ -42,6 +45,7 @@ class MoviesView(View):
 class MoviesTemplateView(TemplateView):
     template_name = "movies.html"
     extra_context = {'genres': Genre.objects.all()}
+# TODO kdyz tuto funkci prejmenuji tak nefunguje
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -53,8 +57,6 @@ class MoviesTemplateView(TemplateView):
         context['movies'] = movies_avg_count
         context['genres'] = Genre.objects.all()
         return context
-
-
 
 
 ## ListView
@@ -79,6 +81,7 @@ def movie(request, pk):
         context = {'movie': movie_}
         return render(request, "movie.html", context)
     return movies(request)  # osetreni co se stane kdyz film s hledanym nazvem neexistuje
+
 
 class MovieTemplateView(TemplateView):
     template_name = "movie.html"
@@ -173,7 +176,7 @@ def creator(request, pk):
         # context = {'creator': creator_}
         # return render(request, "creator.html", context)
         return render(request, "creator.html", {'creator': Creator.objects.get(id=pk)})
-    except:
+    except Creator.DoesNotExist:
         return home(request)
 
 
@@ -251,7 +254,7 @@ class CreatorDeleteView(PermissionRequiredMixin, DeleteView):
 def genre(request, pk):
     try:
         return render(request, "genre.html", {'genre': Genre.objects.get(id=pk)})
-    except:
+    except Creator.DoesNotExist:
         return home(request)
 
 
@@ -318,6 +321,6 @@ class CountryDeleteView(PermissionRequiredMixin, DeleteView):
 def country(request, pk):
     try:
         return render(request, 'country.html', {'country': Country.objects.get(id=pk)})
-    except:
+    except Creator.DoesNotExist:
         return home(request)
 # TODO tato funkce funguje pouze pro filmy ale ne pro Actors!!
