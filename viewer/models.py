@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db.models import Model, CharField, DateField, ForeignKey, SET_NULL, TextField, IntegerField, \
     ManyToManyField, DateTimeField, CASCADE
 
@@ -56,6 +58,13 @@ class Creator(Model):
 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def age(self):
+        if self.date_of_birth:
+            today = date.today()
+            return today.year - self.date_of_birth.year  # FIXME - domácí úloha
+        return None
+
 
 
 class Movie(Model):
