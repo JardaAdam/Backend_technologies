@@ -60,6 +60,8 @@ class Creator(Model):
         return f"{self.first_name} {self.last_name}"
 
     def age(self):
+        if not self.date_of_birth:
+            return None
         end_date = self.date_of_death if self.date_of_death else date.today()
 
         age = end_date.year - self.date_of_birth.year - (
