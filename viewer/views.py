@@ -94,6 +94,7 @@ class MovieTemplateView(TemplateView):
             context['movie'] = movie_[0]
             context['form_review'] = ReviewModelForm
             rating_avg = movie_[0].reviews.aggregate(Avg('rating'))['rating__avg']
+            """ reviews -> related_name z class Review (Avg( cerpam z class Review)[klic ktery vraci hodnotu ze slovniku]                                                        """
             # print(f"rating_avg: {rating_avg}")
             context['rating_avg'] = rating_avg
             return context

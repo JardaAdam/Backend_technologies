@@ -5,6 +5,7 @@ v account/models.py
 
 vytvorim class
 
+account/forms.py
 
 zaregistruji v accounts/admin
 
