@@ -60,10 +60,14 @@ class Creator(Model):
         return f"{self.first_name} {self.last_name}"
 
     def age(self):
-        if self.date_of_birth:
-            today = date.today()
-            return today.year - self.date_of_birth.year  # FIXME - domácí úloha
-        return None
+        end_date = self.date_of_death if self.date_of_death else date.today()
+
+        age = end_date.year - self.date_of_birth.year - (
+                (end_date.month, end_date.day) < (self.date_of_birth.month, self.date_of_birth.day)
+        )
+        return age
+
+
 
 
 
