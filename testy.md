@@ -66,3 +66,33 @@ class ExampleTestCase(TestCase):
 
 
 3. testy na gui 
+- musime nainstalovat Selenium ( prace s webovou strankou)
+```bash
+pip install selenium
+```
+-behem testovani musi byt spusten servet!!
+
+>[!WARNING]
+> pracuje s realnou databazi
+
+### Struktura testu
+- definuji si prohlizec ktery testuji
+  - spustim stranku na serveru
+  - otestuji zda je tento text 
+```python
+
+```
+- test prihlaseni ( tato kontrola je efektivnejsi pomoci test_form.py)
+  - vyberu si prohlizec
+  - urcim cestu na danou adresu 
+  - zadavam ze zdrojoveho kodu stranky presne adresy kam se bude vkladat text
+  - 
+```python
+
+```
+- konec def musi byt assert !
+
+
+## Selenium 
+- da se pouzit k simulaci ze clovek je u pocitace a neco dela. 
+- da se nastavit jakakoliv stranka a naprogramovat ukony ktere se maji provadet 

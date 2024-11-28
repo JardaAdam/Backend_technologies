@@ -45,7 +45,6 @@ class MoviesView(View):
 class MoviesTemplateView(TemplateView):
     template_name = "movies.html"
     extra_context = {'genres': Genre.objects.all()}
-# TODO kdyz tuto funkci prejmenuji tak nefunguje
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -98,7 +97,7 @@ class MovieTemplateView(TemplateView):
             # print(f"rating_avg: {rating_avg}")
             context['rating_avg'] = rating_avg
             return context
-        return reverse_lazy('movies')
+        return reverse_lazy('movies')  # fixme
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -324,4 +323,3 @@ def country(request, pk):
         return render(request, 'country.html', {'country': Country.objects.get(id=pk)})
     except Creator.DoesNotExist:
         return home(request)
-# TODO tato funkce funguje pouze pro filmy ale ne pro Actors!!
