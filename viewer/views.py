@@ -97,7 +97,7 @@ class MovieTemplateView(TemplateView):
             # print(f"rating_avg: {rating_avg}")
             context['rating_avg'] = rating_avg
             return context
-        return reverse_lazy('movies')  # fixme
+        return reverse_lazy('movies')  # fixme branche dev commit Fixed redirect in case
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
