@@ -1,0 +1,1 @@
+# Přidání obrázků do databaze 
