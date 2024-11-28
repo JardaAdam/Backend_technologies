@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Avg, Count
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -85,6 +86,13 @@ def movie(request, pk):
 class MovieTemplateView(TemplateView):
     template_name = "movie.html"
 
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        if not Movie.objects.filter(id=pk).exists():
+            return HttpResponseRedirect(reverse_lazy('movies'))
+        return super().get(request, *args, **kwargs)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs['pk']
@@ -97,7 +105,7 @@ class MovieTemplateView(TemplateView):
             # print(f"rating_avg: {rating_avg}")
             context['rating_avg'] = rating_avg
             return context
-        return reverse_lazy('movies')  # fixme branche dev commit Fixed redirect in case
+        return context
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
