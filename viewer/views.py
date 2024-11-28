@@ -3,11 +3,11 @@ from django.db.models import Avg, Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView, FormView, UpdateView, DeleteView, DetailView
 
 from accounts.models import Profile
 from viewer.forms import CreatorForm, MovieForm, GenreModelForm, CountryModelForm, ReviewModelForm
-from viewer.models import Movie, Creator, Genre, Country, Review
+from viewer.models import Movie, Creator, Genre, Country, Review, Image
 
 
 def home(request):
@@ -323,3 +323,7 @@ def country(request, pk):
         return render(request, 'country.html', {'country': Country.objects.get(id=pk)})
     except Creator.DoesNotExist:
         return home(request)
+
+class ImageDetailView(DetailView):
+    model = Image
+    template_name = 'image.html'

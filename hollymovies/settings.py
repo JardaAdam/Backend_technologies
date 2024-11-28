@@ -136,3 +136,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 """ Prihlasovaci odkazy pro aplikaci accounts"""
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+MEDIA_ROOT = BASE_DIR
+MEDIA_URL = 'images/'
