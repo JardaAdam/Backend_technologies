@@ -1,3 +1,8 @@
+from django.forms.models import ModelForm
+#Vkladani souboru
+- pokud chci vlozit neco jineho nez image muzu pouzit FileField
+  - musime ale myslet na to jak se tento soubor bude zobrazovat
+  - image muze byt v jakemkoli modelu v models.py
 # Přidání obrázků do databaze 
 - Django umi pracovat s obrazky naprimo
 - Nainstalovat Pillow knihovnu
@@ -26,4 +31,19 @@ urlpatterns = [] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
   - image.html -> vytvorim template kde se bude obrazek zobrazovat 
   - musime v urls.py definovat url cestu k obrazku 
 
+
+## Vkladani obrazku
+- template -> form.html
+  - musime jeste pridat enctype kvuli funkci odesilani
+```python
+
+```
+- forms.py 
+```python
+class ImageModelForm(ModelForm):
+    class Meta:
+```
+- views.py
+  - Create, Update, Delete
+- url.py
 
