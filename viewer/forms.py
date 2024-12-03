@@ -1,9 +1,10 @@
 import re
 from datetime import date
-
+from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.db.models.expressions import result
-from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
+from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput, IntegerField
 
 from viewer.models import Country, Creator, Movie, Genre, Review, Image
 
@@ -246,6 +247,13 @@ class MovieModelForm(ModelForm):
 
 
 class ReviewModelForm(ModelForm):
+    rating = IntegerField(
+        validators=[
+            MinValueValidator(1, message="Hodnota musí být alespoň 1."),
+            MaxValueValidator(10, message="Hodnota nesmí být větší než 10.")
+        ]
+    )
+
     class Meta:
         model = Review
         fields = ['rating', 'comment']
@@ -253,6 +261,8 @@ class ReviewModelForm(ModelForm):
             'rating': 'Hodnocení',
             'comment': 'Komentář'
         }
+
+
 
 class ImageModelForm(ModelForm):
     class Meta:
