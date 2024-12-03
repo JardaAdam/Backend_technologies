@@ -32,7 +32,7 @@ def test_creator_form_is_valid(self):
     self.assertTrue(form.is_valid())
 
 
-@skip("Nefunguje datum narození v budoucnosti - domácí úkol")
+#@skip("Nefunguje datum narození v budoucnosti - domácí úkol")
 def test_creator_form_date_of_birth_is_invalid(self):
     form = CreatorForm(
         data={

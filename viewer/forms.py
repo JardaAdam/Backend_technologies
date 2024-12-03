@@ -143,8 +143,8 @@ class CreatorForm(ModelForm):
         if not initial_first_name and not initial_last_name:
             raise ValidationError(" Je potreba zadat minimalne jedno jmeno ")
         # porovnava datum narozeni a umrti
-        initial_date_of_birth = cleaned_data['date_of_birth']
-        initial_date_of_death = cleaned_data['date_of_death']
+        initial_date_of_birth = cleaned_data.get('date_of_birth')
+        initial_date_of_death = cleaned_data.get('date_of_death')
         if initial_date_of_birth and initial_date_of_death and initial_date_of_death <= initial_date_of_birth:
             raise ValidationError(" nelze umrit pred narozenim :)")
 
