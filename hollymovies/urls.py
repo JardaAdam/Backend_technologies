@@ -60,6 +60,8 @@ urlpatterns = [
     path('image/delete/<pk>/', ImageDeleteView.as_view(), name='image_delete'),
     path('image/<pk>/', ImageDetailView.as_view(), name='image'),
 
+    path('search/', search, name='search'),
+
     #path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
     path('accounts/logout/', user_logout, name='logout'),     # zde je odkaz na lokalni funkci logout z account/views.py
