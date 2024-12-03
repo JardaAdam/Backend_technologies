@@ -55,7 +55,9 @@ urlpatterns = [
     path('country/update/<pk>/', CountryUpdateView.as_view(), name='country_update'),
     path('country/delete/<pk>/', CountryDeleteView.as_view(), name='country_delete'),
     path('country/<pk>/', country, name='country'),
-
+    path('image/create/', ImageCreateView.as_view(), name='image_create'),
+    path('image/update/<pk>/', ImageUpdateView.as_view(), name='image_update'),
+    path('image/delete/<pk>/', ImageDeleteView.as_view(), name='image_delete'),
     path('image/<pk>/', ImageDetailView.as_view(), name='image'),
 
     #path('accounts/login/', SubmittableLoginView.as_view(), name='login'),

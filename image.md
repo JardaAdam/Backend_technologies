@@ -2,7 +2,7 @@ from django.forms.models import ModelForm
 #Vkladani souboru
 - pokud chci vlozit neco jineho nez image muzu pouzit FileField
   - musime ale myslet na to jak se tento soubor bude zobrazovat
-  - image muze byt v jakemkoli modelu v models.py
+- image muze byt v jakemkoli modelu v models.py
 # Přidání obrázků do databaze 
 - Django umi pracovat s obrazky naprimo
 - Nainstalovat Pillow knihovnu

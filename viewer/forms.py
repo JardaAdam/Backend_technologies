@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.expressions import result
 from django.forms import Form, CharField, DateField, ModelChoiceField, Textarea, ModelForm, NumberInput
 
-from viewer.models import Country, Creator, Movie, Genre, Review
+from viewer.models import Country, Creator, Movie, Genre, Review, Image
 
 
 # pozor z ceho importuji!! zde importuji z django.form!!
@@ -252,4 +252,15 @@ class ReviewModelForm(ModelForm):
         labels = {
             'rating': 'Hodnocení',
             'comment': 'Komentář'
+        }
+
+class ImageModelForm(ModelForm):
+    class Meta:
+        model = Image
+        fields = '__all__'
+        labels = {
+            'image': 'Obrázek',
+            'movie': 'Film',
+            'actors': 'Herci',
+            'description': 'Popis'
         }
