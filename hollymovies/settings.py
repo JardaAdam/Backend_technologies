@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -42,9 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_dump_load_utf8',
-
+    'rest_framework',
 
     'accounts',
+    'api',
     'viewer',
 ]
 
@@ -91,6 +93,11 @@ DATABASES = {
     }
 }
 
+if 'test' in sys.argv:  # FIXME
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'test_db.sqlite3',
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -139,3 +146,9 @@ LOGOUT_REDIRECT_URL = 'home'
 
 MEDIA_ROOT = BASE_DIR
 MEDIA_URL = 'images/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ]
+}

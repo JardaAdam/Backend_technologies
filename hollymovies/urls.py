@@ -21,19 +21,19 @@ from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 from accounts.views import SubmittableLoginView, SignUpView, user_logout
+from api.views import Movies, MovieDetail, Creators, CreatorDetail
 from hollymovies import settings
 from viewer.views import *
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', home, name='home'),
 
-    #path('movies/', movies, name='movies'),
-    #path('movies/', MoviesView.as_view(), name='movies'),
+    # path('movies/', movies, name='movies'),
+    # path('movies/', MoviesView.as_view(), name='movies'),
     path('movies/', MoviesTemplateView.as_view(), name='movies'),
-    #path('movies/', MoviesListView.as_view(), name='movies'),
+    # path('movies/', MoviesListView.as_view(), name='movies'),
     path('movie/create/', MovieCreateView.as_view(), name='movie_create'),
     path('movie/update/<int:pk>/', MovieUpdateView.as_view(), name='movie_update'),
     path('movie/delete/<int:pk>/', MovieDeleteView.as_view(), name='movie_delete'),
@@ -60,9 +60,16 @@ urlpatterns = [
     path('image/delete/<pk>/', ImageDeleteView.as_view(), name='image_delete'),
     path('image/<pk>/', ImageDetailView.as_view(), name='image'),
 
-    #path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
-    path('accounts/signup/', SignUpView.as_view(), name='signup'),
-    path('accounts/logout/', user_logout, name='logout'),     # zde je odkaz na lokalni funkci logout z account/views.py
-    path('accounts/', include('django.contrib.auth.urls')), # defaultní cesty a views z Djanga
+    path('search/', search, name='search'),
 
+    # path('accounts/login/', SubmittableLoginView.as_view(), name='login'),
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
+    path('accounts/logout/', user_logout, name='logout'),
+    # zde je odkaz na lokalni funkci logout z account/views.py
+    path('accounts/', include('django.contrib.auth.urls')),  # defaultní cesty a views z Djanga
+
+    path('api/movies/', Movies.as_view(), name='api_movies'),
+    path('api/movie/<pk>/', MovieDetail.as_view(), name='api_movie'),
+    path('api/creators/', Creators.as_view(), name='api_creators'),
+    path('api/creator/<pk>/', CreatorDetail.as_view(), name='api_creator'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
