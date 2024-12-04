@@ -1,6 +1,7 @@
 import os
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Avg, Count
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -90,6 +91,17 @@ def movie(request, pk):
 class MovieTemplateView(TemplateView):
     template_name = "movie.html"
 
+    """Funkce get zde přizpůsobuje zpracování požadavků pro případ, že objekt neexistuje. Toto je užitečné pro 
+    zlepšení uživatelské zkušenosti a ošetření potenciálních chyb v API nebo aplikaci."""
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs['pk']
+        if not Movie.objects.filter(id=pk).exists():
+            return HttpResponseRedirect(reverse_lazy('movies'))
+        movie_ = Movie.objects.get(id=pk)
+        movie_.page_views = movie_.page_views + 1
+        movie_.save()
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs['pk']
@@ -97,12 +109,13 @@ class MovieTemplateView(TemplateView):
         if movie_:
             context['movie'] = movie_[0]
             context['form_review'] = ReviewModelForm
-            rating_avg = movie_[0].reviews.aggregate(Avg('rating'))['rating__avg']
+            #rating_avg = movie_[0].reviews.aggregate(Avg('rating'))['rating__avg']
             """ reviews -> related_name z class Review (Avg( cerpam z class Review)[klic ktery vraci hodnotu ze slovniku]                                                        """
             # print(f"rating_avg: {rating_avg}")
-            context['rating_avg'] = rating_avg
+            # context['rating_avg'] = round(movie_[0].rating, 2)
+            context['rating_avg'] = movie_[0].rating
             return context
-        return reverse_lazy('movies')  # fixme
+        return context
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -122,6 +135,8 @@ class MovieTemplateView(TemplateView):
             )
         movie_ = context['movie']
         rating_avg = movie_.reviews.aggregate(Avg('rating'))['rating__avg']
+        movie_.rating = rating_avg  # uklada prumer hodnoceni do rating u filmu v tabulce
+        movie_.save()
         # print(f"rating_avg: {rating_avg}")
         context['rating_avg'] = rating_avg
         return render(request, 'movie.html', context)

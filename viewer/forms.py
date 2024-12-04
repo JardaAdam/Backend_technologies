@@ -247,13 +247,6 @@ class MovieModelForm(ModelForm):
 
 
 class ReviewModelForm(ModelForm):
-    rating = IntegerField(
-        validators=[
-            MinValueValidator(1, message="Hodnota musí být alespoň 1."),
-            MaxValueValidator(10, message="Hodnota nesmí být větší než 10.")
-        ]
-    )
-
     class Meta:
         model = Review
         fields = ['rating', 'comment']
@@ -261,6 +254,7 @@ class ReviewModelForm(ModelForm):
             'rating': 'Hodnocení',
             'comment': 'Komentář'
         }
+    rating = IntegerField(min_value=1, max_value=10)
 
 
 
